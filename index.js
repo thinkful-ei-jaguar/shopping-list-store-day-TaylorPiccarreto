@@ -1,3 +1,5 @@
+'use strict';
+
 const store = {
   items: [
     { id: cuid(), name: 'apples', checked: false },
@@ -25,6 +27,9 @@ const generateItemElement = function (item) {
         </button>
         <button class='shopping-item-delete js-item-delete'>
           <span class='button-label'>delete</span>
+        </button>
+        <button class='shopping-item-edit js-item-edit'>
+          <span class='button-label'>edit</span>
         </button>
       </div>
     </li>`;
@@ -146,6 +151,44 @@ const handleToggleFilterClick = function () {
 };
 
 /**
+ * textbox appears for new name entry
+ */
+function renderEditBox(){
+  const editString = `<form id="js-new-item-name">
+  <input type="text" name="new-item-entry" class="js-new-item-entry" placeholder="e.g., broccoli"></input>
+  <button type="submit" class="save">Save</button>
+</form>`;
+
+return editString;
+  
+}
+
+function handleEditSubmit() {
+  $('#js-new-item-name').on('click', '.save', function (event) {
+    event.preventDefault();
+    console.log(event.target);
+    /*const editItemName = $('.js-new-item-entry').val();
+    addEditName(editItemName);
+    render();*/
+  });
+}
+
+function addEditName(itemName) {
+  store.items.push({ id: cuid(), name: itemName, checked: false });
+}
+
+/**
+ * when clicked a textbox appears to edit name
+ */
+function handleEditClick(){
+  $('.js-shopping-list').on('click', '.js-item-edit', event => {
+    event.preventDefault();
+    
+    $(event.target).parent().parent().append(renderEditBox());
+  });
+}
+
+/**
  * This function will be our callback when the
  * page loads. It is responsible for initially 
  * rendering the shopping list, then calling 
@@ -159,6 +202,8 @@ const handleShoppingList = function () {
   handleNewItemSubmit();
   handleItemCheckClicked();
   handleDeleteItemClicked();
+  handleEditClick();
+  handleEditSubmit();
   handleToggleFilterClick();
 };
 
